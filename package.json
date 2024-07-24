@@ -1,0 +1,16 @@
+{
+  "name": "task",
+  "version": "1.0.0",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app",
+    "fol": "ls",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Fathul",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "validator": "^13.12.0"
+  }
+}
