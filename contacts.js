@@ -158,7 +158,7 @@ const deleteContact = (contactName) => {
     return new Promise((resolve, reject) => {
         getDataContacts((contacts) => {
             const index = contacts.findIndex(contact => contact.name === contactName);
-            if (index == -1) {
+            if (index === -1) {
                 reject(new Error(`Contact not found.`));
             } else {
                 contacts.splice(index, 1)
