@@ -59,6 +59,21 @@ const isValidMobile = (mobile) => {
 
 /**
  * Fungsi untuk menyimpan kontak baru ke dalam file JSON.
+ * @param {string} nameToCheck - Objek kontak baru yang akan disimpan.
+ * @returns {boolean} - Promise yang menyelesaikan saat kontak disimpan.
+ */
+const isNameTaken = (nameToCheck, callback) => {
+    getDataContacts((contacts) => {
+        // Cari apakah nama sudah ada dalam daftar kontak
+        const isTaken = contacts.some(contact => contact.name.trim().toLowerCase() === nameToCheck.trim().toLowerCase());
+        
+        // Panggil callback dengan hasil validasi
+        callback(isTaken);
+    });
+}
+
+/**
+ * Fungsi untuk menyimpan kontak baru ke dalam file JSON.
  * @param {Object} newContact - Objek kontak baru yang akan disimpan.
  * @returns {Promise<void>} - Promise yang menyelesaikan saat kontak disimpan.
  */
@@ -66,9 +81,16 @@ const saveContact = (newContact) => {
     return new Promise((resolve) => {
         // Mengambil data kontak yang ada dan menambah kontak baru
         getDataContacts((contacts) => {
-            contacts.push(newContact);
-            // Menyimpan kembali data kontak yang sudah diperbarui
-            resolve(fs.writeFileSync('./data/contacts.json', JSON.stringify(contacts, null, 2)));
+            isNameTaken(newContact.name, (isTaken) => {
+                if (isTaken) {
+                    console.log(`The name "${newContact.name}" is already taken.`);
+                } else {
+                    console.log(`The name "${newContact.name}" is available.`);
+                    contacts.push(newContact);
+                    // Menyimpan kembali data kontak yang sudah diperbarui
+                    resolve(fs.writeFileSync('./data/contacts.json', JSON.stringify(contacts, null, 2)));
+                }
+            });
         });
     });
 };
@@ -136,7 +158,7 @@ const deleteContact = (contactName) => {
     return new Promise((resolve, reject) => {
         getDataContacts((contacts) => {
             const index = contacts.findIndex(contact => contact.name === contactName);
-            if (index === -1) {
+            if (index == -1) {
                 reject(new Error(`Contact not found.`));
             } else {
                 contacts.splice(index, 1)
