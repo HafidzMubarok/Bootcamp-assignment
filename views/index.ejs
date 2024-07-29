@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./public/stylesheet/style.css">
+    <title><%= title %></title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+        }
+        nav {
+            background-color: #333;
+            padding: 10px;
+            display: flex;
+            flex-direction: row;
+            justify-content: end;
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            padding: 8px 16px;
+        }
+        nav a:hover {
+            background-color: #575757;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="/contact">Contact</a>
+    </nav>
+    <!-- <% const nama = "Tatang"; %> -->
+    <h1>HOME</h1>
+    <h1><%= name %></h1>
+</body>
+</html>
