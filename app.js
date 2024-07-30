@@ -1,5 +1,6 @@
 const express = require('express');
 var expressLayouts = require('express-ejs-layouts');
+var morgan = require('morgan')
 
 const app = express();
 const port = 3000;
@@ -13,8 +14,16 @@ app.set('view engine', 'ejs')
 app.use(expressLayouts);
 app.set('layout', 'layout/main');
 
+// Morgan
+app.use(morgan('dev'));
+
 // Serve static files from the 'public' directory
 app.use(express.static(path.join(__dirname, 'public')));
+
+app.use((req, res, next) => {
+    console.log('Started at', Date.now())
+    next()
+  })
 
 //Route
 app.get('/', (req, res) => {
@@ -31,26 +40,10 @@ app.get('/about', (req, res) => {
 
 app.get('/contact', (req, res) => {
     // Get contact from contacts.json
-    // res.sendFile('contact.html', { root: __dirname });
-    // contacts.getContactList((contact) => {
-    //     res.render('contact', { contacts: contact })
-    // });
-    const contacts = [
-        {
-            name: "Fathul",
-            email: "fathul@mail.com"
-        },
-        {
-            name: "Hasbi",
-            email: "hasbi@mail.com"
-        },
-        {
-            name: "Tatang",
-            email: "tatang@mail.com"
-        },
-    ];
-    
-    res.render('contact', { contacts, title: 'Contacts' })
+    res.sendFile('contact', { root: __dirname });
+    contacts.getContactList((contact) => {
+        res.render('contact', { contacts: contact, title: 'Contacts' })
+    });
 })
 
 app.get('/contact/:name', (req, res) => {
