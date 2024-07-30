@@ -1,13 +1,15 @@
-<h1><%= title %></h1>
+<h1><%= contact.name %></h1>
 
-<h2>Contact Detail</h2>
-<div class="btn">
-    <a href="/contact">Back</a>
-</div>
-<div>
-    <span>Name: <%= contact.name  %></span>
-    <br>
-    <span>Email: <%= contact.email %></span>
-    <br>
-    <span>Phone Number: <%= contact.mobile  %></span>
+<div class="container d-flex flex-column p-5">
+    <h2>Contact Detail</h2>
+    <div class="pt-3">
+        <span>Name: </span> <span class="fw-bold ps-4 text-end"><%= contact.name  %></span>
+        <br>
+        <span>Email: </span> <span class="fw-bold ps-4"><%= contact.email  %></span>
+        <br>
+        <span>Phone Number: </span> <span class="fw-bold ps-4"><%= contact.mobile  %></span>
+    </div>
+    <div class="pt-3">
+        <a href="/contact" class="btn btn-primary">Back</a>
+    </div>
 </div>
