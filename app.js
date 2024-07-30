@@ -1,4 +1,6 @@
 const express = require('express');
+var expressLayouts = require('express-ejs-layouts');
+
 const app = express();
 const port = 3000;
 const contacts = require('./contacts');
@@ -6,6 +8,10 @@ const path = require('path');
 
 // Using EJS
 app.set('view engine', 'ejs')
+
+// Initialize express-ejs-layouts
+app.use(expressLayouts);
+app.set('layout', 'layout/main');
 
 // Serve static files from the 'public' directory
 app.use(express.static(path.join(__dirname, 'public')));
@@ -73,5 +79,5 @@ app.use('/', (req, res) => {
 })
 
 app.listen(port, () => {
-    console.log(`App listening on port ${port}`);
+    console.log(`App listening on http://localhost:${port}/`);
 })
