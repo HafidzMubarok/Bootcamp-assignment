@@ -15,12 +15,12 @@ app.get('/', (req, res) => {
     // const filePath = path.join(__dirname, 'index.html');
     // res.sendFile(filePath);
     // res.sendFile('index.html', { root: __dirname });
-    res.render('index', { name: 'Tatang', title: 'HOME' })
+    res.render('index', { name: 'Tatang', title: 'Home' })
 })
 
 app.get('/about', (req, res) => {
     // res.sendFile('about.html', { root: __dirname });
-    res.render('about')
+    res.render('about', { title: 'About' })
 })
 
 app.get('/contact', (req, res) => {
@@ -44,7 +44,7 @@ app.get('/contact', (req, res) => {
         },
     ];
     
-    res.render('contact', { contacts: contacts })
+    res.render('contact', { contacts: contacts, title: 'Contacts' })
 })
 
 app.get('/contact/:name', (req, res) => {
@@ -55,7 +55,7 @@ app.get('/contact/:name', (req, res) => {
             console.error(error.message);
         } else {
             // console.log('Contact details:', contact);
-            res.render('contact-detail', { contact: contact })
+            res.render('contact-detail', { contact: contact, title: 'Contact Detail' })
         }
     });
 })
@@ -64,7 +64,7 @@ app.get('/product/:id', (req, res) => {
     const id = req.params.id;
     const category = req.query.category;
 
-    res.send(`Product id: ${id}. <br> <br> Category: ${category}`);
+    res.send(`Product id: ${id}. <br> <br> Category: ${category}`, { title: 'Product by id' });
 })
         
 app.use('/', (req, res) => {
