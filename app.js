@@ -44,7 +44,7 @@ app.get('/contact', (req, res) => {
         },
     ];
     
-    res.render('contact', { contacts: contacts, title: 'Contacts' })
+    res.render('contact', { contacts, title: 'Contacts' })
 })
 
 app.get('/contact/:name', (req, res) => {
