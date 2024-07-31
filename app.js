@@ -112,11 +112,43 @@ app.route('/contact-edit/:name')
             if (error) {
                 console.error(error.message);
             } else {
-                res.render('contact-edit', { contact: contact, title: 'Edit Contact' })
+                res.render('contact-edit', { contact: contact, title: 'Edit Contact', errors: {} })
             }
         });
     })
-    .post((req, res) => {
+    .post(
+        // Input validation
+        body('email')
+            .isEmail().withMessage('Invalid email address')
+            .normalizeEmail(),
+        body('mobile')
+            .isMobilePhone().withMessage('Invalid phone number')
+            .trim()
+            .escape(), (req, res) => {
+            
+        const errors = validationResult(req);
+        const errorMessages = errors.array().reduce((acc, error) => {
+            acc[error.path] = error.msg;
+            return acc;
+        }, {});
+            
+        // console.log(errorMessages);
+            
+        if (!errors.isEmpty()) {
+            return contacts.getContactDetail(req.params.name, (error, contact) => {
+                console.log(req.body.name);
+                if (error) {
+                    console.error(error.message);
+                } else {
+                    res.render('contact-edit', {
+                        contact: req.body,
+                        title: 'Edit Contact',
+                        errors: errorMessages,
+                    })
+                }
+            });
+        }
+        
         const contact = {
             name: req.body.name,
             email: req.body.email,

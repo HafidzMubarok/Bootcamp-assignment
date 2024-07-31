@@ -6,15 +6,21 @@
         <div class="pt-3">
             <div class="mb-3">
                 <label for="name" class="form-label required">Name</label>
-                <input type="name" class="form-control" id="name" name="name" placeholder="Name" value="<%= contact.name %>">
+                <input type="name" class="form-control " id="name" name="name" placeholder="Name" value="<%= contact.name %>" required>
             </div>
             <div class="mb-3">
                 <label for="email" class="form-label">Email</label>
-                <input type="email" class="form-control" id="email" name="email" placeholder="name@example.com" value="<%= contact.email %>">
+                <input type="email" class="form-control <%= errors.email ? 'is-invalid' : '' %>" id="email" name="email" placeholder="name@example.com" value="<%= contact.email %>">
+                <div class="invalid-feedback">
+                    <%= errors.email || '' %>
+                </div>
             </div>
             <div class="mb-3">
                 <label for="mobile" class="form-label">Phone Number</label>
-                <input type="mobile" class="form-control" id="mobile" name="mobile" placeholder="08xxxxxxxxxx" value="<%= contact.mobile %>">
+                <input type="mobile" class="form-control <%= errors.mobile ? 'is-invalid' : '' %>" id="mobile" name="mobile" placeholder="08xxxxxxxxxx" value="<%= contact.mobile %>">
+                <div class="invalid-feedback">
+                    <%= errors.mobile || '' %>
+                </div>
             </div>
         </div>
         <div class="pt-3">
