@@ -1,6 +1,7 @@
 const express = require('express');
 var expressLayouts = require('express-ejs-layouts');
-var morgan = require('morgan')
+var morgan = require('morgan');
+const { body, validationResult } = require('express-validator');
 
 const app = express();
 const port = 3000;
@@ -43,8 +44,6 @@ app.get('/about', (req, res) => {
 
 
 app.get('/contact', (req, res) => {
-    // Get contact from contacts.json
-    // res.sendFile('contact', { root: __dirname });
     contacts.getContactList((contact) => {
         res.render('contact', { contacts: contact, title: 'Contacts' })
     });
@@ -65,9 +64,32 @@ app.get('/contact/:name', (req, res) => {
 
 app.route('/create-contact')
     .get((req, res) => {
-        res.render('contact-create', { title: 'Create New Contact' })
+        res.render('contact-create', { title: 'Create New Contact', errors: {}, formData: {} })
     })
-    .post((req, res) => {
+    .post(
+        // Input validation
+        body('email')
+            .isEmail().withMessage('Invalid email address')
+            .normalizeEmail(),
+        body('mobile')
+            .isMobilePhone().withMessage('Invalid phone number')
+            .trim()
+            .escape(), (req, res) => {
+            
+        const errors = validationResult(req);
+        const errorMessages = errors.array().reduce((acc, error) => {
+            acc[error.path] = error.msg;
+            return acc;
+        }, {});
+            
+        if (!errors.isEmpty()) {
+            return res.render('contact-create', {
+                title: 'Create New Contact',
+                errors: errorMessages,
+                formData: req.body
+            });
+        }
+        
         const contact = {
             name: req.body.name,
             email: req.body.email,
