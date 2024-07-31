@@ -92,3 +92,8 @@ p::first-letter {
     margin-right: 10px;
     color: #575757;
 }
+
+.required::after{
+    content: " *";
+    color: red;
+}

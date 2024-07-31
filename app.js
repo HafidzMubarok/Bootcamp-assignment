@@ -20,6 +20,9 @@ app.use(morgan('dev'));
 // Serve static files from the 'public' directory
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Middleware untuk memparsing data form-urlencoded
+app.use(express.urlencoded({ extended: true }));
+
 app.use((req, res, next) => {
     console.log('Started at', Date.now())
     next()
@@ -38,9 +41,10 @@ app.get('/about', (req, res) => {
     res.render('about', { title: 'About' })
 })
 
+
 app.get('/contact', (req, res) => {
     // Get contact from contacts.json
-    res.sendFile('contact', { root: __dirname });
+    // res.sendFile('contact', { root: __dirname });
     contacts.getContactList((contact) => {
         res.render('contact', { contacts: contact, title: 'Contacts' })
     });
@@ -57,6 +61,61 @@ app.get('/contact/:name', (req, res) => {
             res.render('contact-detail', { contact: contact, title: 'Contact Detail' })
         }
     });
+})
+
+app.route('/create-contact')
+    .get((req, res) => {
+        res.render('contact-create', { title: 'Create New Contact' })
+    })
+    .post((req, res) => {
+        const contact = {
+            name: req.body.name,
+            email: req.body.email,
+            mobile: req.body.mobile,
+        };
+        
+        try {
+            contacts.saveContact(contact);
+            console.log(`Contact data has been saved!`);
+            res.redirect('/contact');
+        } catch (err) {
+            console.error(err);
+        }
+    })
+
+app.route('/contact-edit/:name')
+    .get((req, res) => {
+        const name = req.params.name;
+        contacts.getContactDetail(name, (error, contact) => {
+            if (error) {
+                console.error(error.message);
+            } else {
+                res.render('contact-edit', { contact: contact, title: 'Edit Contact' })
+            }
+        });
+    })
+    .post((req, res) => {
+        const contact = {
+            name: req.body.name,
+            email: req.body.email,
+            mobile: req.body.mobile,
+        };
+        
+        try {
+            contacts.updateContact(req.params.name, contact);
+            console.log(`Contact data has been saved!`);
+            res.redirect('/contact');
+        } catch (err) {
+            console.error(err);
+        }
+    })
+    
+app.delete('/contact/:name', (req, res) => {
+    const name = req.params.name
+    console.log(`Contact with name ${name} has been deleted!`);
+    contacts.deleteContact(name);
+
+    res.send(`Contact ${name} deleted successfully!`);
 })
 
 app.get('/product/:id', (req, res) => {

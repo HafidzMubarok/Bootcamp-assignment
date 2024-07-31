@@ -1,0 +1,48 @@
+<h1><%= title %></h1>
+
+<div class="container d-flex flex-column p-5">
+    <h2>Edit <%= contact.name %> Contact</h2>
+    <form action="/contact-edit/<%= contact.name %>" method="post">
+        <div class="pt-3">
+            <div class="mb-3">
+                <label for="name" class="form-label required">Name</label>
+                <input type="name" class="form-control" id="name" name="name" placeholder="Name" value="<%= contact.name %>">
+            </div>
+            <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" class="form-control" id="email" name="email" placeholder="name@example.com" value="<%= contact.email %>">
+            </div>
+            <div class="mb-3">
+                <label for="mobile" class="form-label">Phone Number</label>
+                <input type="mobile" class="form-control" id="mobile" name="mobile" placeholder="08xxxxxxxxxx" value="<%= contact.mobile %>">
+            </div>
+        </div>
+        <div class="pt-3">
+            <a href="/contact" class="btn btn-secondary">Back</a>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+    </form>
+</div>
+
+<!-- <script>
+    document.querySelectorAll('form').forEach(form => {
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        if (confirm('Are you sure you want to edit this contact?')) {
+          fetch(this.action, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: new URLSearchParams(new FormData(this)).toString()
+          }).then(response => {
+            if (response.ok) {
+              location.reload();
+            } else {
+              alert('Failed to edit contact.');
+            }
+          });
+        }
+      });
+    });
+  </script> -->
