@@ -9,10 +9,10 @@
         <% if (!contacts.length) { %>
             <span>There is no contact yet!</span>
         <% }else { %>
-            <div class="border rounded-2">
-                <table class="table">
+            <div style="border-radius: 6px; overflow: hidden;">
+                <table class="table border border-secondary border-2">
                     <!-- Table Header -->
-                     <thead class="table-dark">
+                     <thead class="table-secondary">
                          <tr>
                              <th class="px-4">Name</th>
                              <th>Phone Number</th>
@@ -23,6 +23,7 @@
                     <!-- Table Data -->
                     <% contacts.forEach(contact => { %>
                         <tr>
+                          <tbody class="table-secondary">
                             <td class="px-4">
                                 <span><%= contact.name  %></span>
                             </td>
@@ -39,6 +40,7 @@
                                     </button>
                                 </form>
                             </td>
+                          </tbody>
                         </tr>
                     <% }) %>
                 </table>
