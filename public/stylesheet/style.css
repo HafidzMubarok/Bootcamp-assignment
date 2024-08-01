@@ -35,6 +35,13 @@ main {
 .sidenav a:hover {
     color: #f1f1f1;
 }
+
+.sidenav a.active {
+    border-right: 4px solid #17a2b8;
+    background-color: #575757;
+    color: #f8f9fa; 
+    font-weight: bold; 
+}
 /* nav {
     background-color: #333;
     padding: 10px;

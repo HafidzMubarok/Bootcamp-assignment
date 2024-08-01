@@ -25,21 +25,21 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.urlencoded({ extended: true }));
 
 app.use((req, res, next) => {
-    console.log('Started at', Date.now())
-    next()
-  })
+    res.locals.currentPage = req.path;
+    next();
+});
 
 //Route
 app.get('/', (req, res) => {
     // const filePath = path.join(__dirname, 'index.html');
     // res.sendFile(filePath);
     // res.sendFile('index.html', { root: __dirname });
-    res.render('index', { name: 'Tatang', title: 'Home' })
+    res.render('index', { name: 'Tatang', title: 'Home', currentPage: '/' })
 })
 
 app.get('/about', (req, res) => {
     // res.sendFile('about.html', { root: __dirname });
-    res.render('about', { title: 'About' })
+    res.render('about', { title: 'About', currentPage: '/about' })
 })
 
 
@@ -51,7 +51,7 @@ app.get('/contact', (req, res) => {
     
     contacts.getContactList((contact) => {
         // Callback ini akan dijalankan setelah contactList terisi
-        res.render('contact', { contacts: contact, title: 'Contacts' });
+        res.render('contact', { contacts: contact, title: 'Contacts', currentPage: '/contact' });
     });
 
     // contacts.getContactList((contactList) => {
