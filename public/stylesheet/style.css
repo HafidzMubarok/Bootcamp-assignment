@@ -57,27 +57,27 @@ nav a:hover {
 /* Content */
 h1 {
     text-align: center;
-    color: #333;
+    color:#17a2b8;
     border-bottom: 2px solid;
     padding-bottom: 10px;
 }
 
 p {
     margin: 20px 0;
-    color: #555;
+    color: #f8f9fa;
     text-align: justify;
 }
 
 p::first-letter {
     font-size: 1.2em;
     font-weight: bold;
-    color: #575757;
+    color: #17a2b8;
 }
 
 .container {
     max-width: 800px;
     margin: auto;
-    background: #fff;
+    background: #343A40;
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -95,7 +95,7 @@ p::first-letter {
     height: 150px;
     object-fit: cover;
     margin-right: 20px;
-    border: 3px solid #575757;
+    border: 3px solid #17a2b8;
 }
 
 .profile .bio {
@@ -105,7 +105,7 @@ p::first-letter {
 .skills {
     background-color: #f9f9f9;
     padding: 10px;
-    border-left: 4px solid #575757;
+    border-left: 4px solid #17a2b8;
     margin: 20px 0;
 }
 
