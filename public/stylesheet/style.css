@@ -97,3 +97,8 @@ p::first-letter {
     content: " *";
     color: red;
 }
+
+/* Pagination */
+.page-link.active-page {
+    background-color: #343A40;
+}
