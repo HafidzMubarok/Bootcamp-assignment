@@ -134,6 +134,25 @@ app.route('/contact-edit/:name')
     })
     .post(
         // Input validation
+        body('name')
+            .trim()
+            .notEmpty().withMessage('Name is required')
+            .custom(async (name, { req }) => {
+                return new Promise((resolve, reject) => {
+                    const originalName = req.body.originalName; // Asumsikan originalName dikirim dari form
+                    if (name === originalName) {
+                        resolve(true); // Nama tidak diubah, lanjutkan
+                    } else {
+                        contacts.isNameTaken(name, (isTaken) => {
+                            if (isTaken) {
+                                reject(new Error('Name already exists'));
+                            } else {
+                                resolve(true);
+                            }
+                        });
+                    }
+                });
+            }),
         body('email')
             .isEmail().withMessage('Invalid email address')
             .normalizeEmail(),

@@ -6,7 +6,10 @@
         <div class="pt-3">
             <div class="mb-3">
                 <label for="name" class="form-label required">Name</label>
-                <input type="name" class="form-control " id="name" name="name" placeholder="Name" value="<%= contact.name %>" required>
+                <input type="name" class="form-control <%= errors.name ? 'is-invalid' : '' %>" id="name" name="name" placeholder="Name" value="<%= contact.name %>" required>
+                <div class="invalid-feedback">
+                  <%= errors.name || '' %>
+                </div>
             </div>
             <div class="mb-3">
                 <label for="email" class="form-label">Email</label>
@@ -23,6 +26,10 @@
                 </div>
             </div>
         </div>
+        
+        <!-- Hidden input for original name -->
+        <input type="hidden" name="originalName" value="<%= contact.name %>">
+
         <div class="pt-3">
             <a href="/contact" class="btn btn-secondary">Back</a>
             <button type="submit" class="btn btn-primary">Submit</button>
