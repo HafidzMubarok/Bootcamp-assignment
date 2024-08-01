@@ -68,12 +68,27 @@ app.route('/create-contact')
     })
     .post(
         // Input validation
+        body('name')
+            .trim()
+            .notEmpty().withMessage('Name is required')
+            .custom(async (name, { req }) => {
+                return new Promise((resolve, reject) => {
+                    contacts.isNameTaken(name, (isTaken) => {
+                        if (isTaken) {
+                            reject(new Error('Name already exists'));
+                        } else {
+                            resolve(true);
+                        }
+                    });
+                });
+            }),
         body('email')
+            .trim()
             .isEmail().withMessage('Invalid email address')
             .normalizeEmail(),
         body('mobile')
-            .isMobilePhone().withMessage('Invalid phone number')
             .trim()
+            .isMobilePhone().withMessage('Invalid phone number')
             .escape(), (req, res) => {
             
         const errors = validationResult(req);
@@ -81,7 +96,8 @@ app.route('/create-contact')
             acc[error.path] = error.msg;
             return acc;
         }, {});
-            
+        console.error(errorMessages);
+        
         if (!errors.isEmpty()) {
             return res.render('contact-create', {
                 title: 'Create New Contact',
