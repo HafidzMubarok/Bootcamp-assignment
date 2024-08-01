@@ -44,23 +44,27 @@ app.get('/about', (req, res) => {
 
 
 app.get('/contact', (req, res) => {
-    const page = parseInt(req.query.page) || 1; // halaman saat ini
-    const limit = parseInt(req.query.limit) || 5; // jumlah item per halaman
-    const startIndex = (page - 1) * limit;
-    const endIndex = page * limit;
-
-    contacts.getContactList((contactList) => {
-        const contacts = contactList.slice(startIndex, endIndex);
-        console.log(Math.ceil(contactList.length));
-
-        res.render('contact', { 
-            contacts: contacts, 
-            title: 'Contacts', 
-            currentPage: page,
-            totalPages: Math.ceil(contactList.length / limit),
-            limit: limit,
-        });
+    // const page = parseInt(req.query.page) || 1; // halaman saat ini
+    // const limit = parseInt(req.query.limit) || 5; // jumlah item per halaman
+    // const startIndex = (page - 1) * limit;
+    // const endIndex = page * limit;
+    
+    contacts.getContactList((contact) => {
+        // Callback ini akan dijalankan setelah contactList terisi
+        res.render('contact', { contacts: contact, title: 'Contacts' });
     });
+
+    // contacts.getContactList((contactList) => {
+    //     const contacts = contactList.slice(startIndex, endIndex);
+
+    //     res.render('contact', { 
+    //         contacts: contacts, 
+    //         title: 'Contacts', 
+    //         currentPage: page,
+    //         totalPages: Math.ceil(contactList.length / limit),
+    //         limit: limit,
+    //     });
+    // });
 })
 
 app.get('/contact/:name', (req, res) => {

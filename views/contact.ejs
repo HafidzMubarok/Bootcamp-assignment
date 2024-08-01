@@ -5,72 +5,43 @@
         <!-- Add new contact -->
         <a href="/create-contact" class="btn btn-light bg-gradient text-center text-secondary"><i class="bi bi-person-plus-fill me-2"></i> Add New Contact</a>
     </div>
-    <div>
+    <div class="text-light">
         <% if (!contacts.length) { %>
             <span>There is no contact yet!</span>
         <% }else { %>
-            <div class="rounded" style="border-radius: 6px; overflow: hidden;">
-                <table class="table border border-secondary border-2" style="background-color: #343a40; color: #f8f9fa;">
-                    <!-- Table Header -->
-                     <thead class="text-secondary">
-                         <tr>
-                             <th class="px-4">Name</th>
-                             <th>Phone Number</th>
-                             <th class="text-end pe-4">Action</th>
-                         </tr>
-                     </thead>
-        
-                    <!-- Table Data -->
-                    <% contacts.forEach(contact => { %>
-                        <tr>
-                          <tbody class="">
-                            <td class="px-4">
-                                <span><%= contact.name  %></span>
-                            </td>
-                            <td>
-                                <span><%= contact.mobile  %></span>
-                            </td>
-                            <td class="px-4 text-end">
-                                <a href="/contact/<%= contact.name %>" class="btn btn-secondary text-info bg-gradient" data-bs-toggle="tooltip" title="show detail"><i class="bi bi-eye"></i></a>
-                                <a href="/contact-edit/<%= contact.name %>" class="btn btn-secondary text-warning bg-gradient" data-bs-toggle="tooltip" title="edit data"><i class="bi bi-pencil-square text-light"></i></a>
-                                <form action="/contact/<%= contact.name %>" method="post" class="d-inline">
-                                    <input type="hidden" name="_method" value="DELETE">
-                                    <button type="submit" class="btn btn-secondary text-danger bg-gradient" data-bs-toggle="tooltip" title="delete">
-                                        <i class="bi bi-trash-fill"></i>
-                                    </button>
-                                </form>
-                            </td>
-                          </tbody>
-                        </tr>
-                    <% }) %>
-                  </table>
-                  <!-- Pagination -->
-                  <nav aria-label="Page navigation">
-                    <ul class="pagination justify-content-center mt-4">
-                      
-                      <!-- Previous Button -->
-                      <li class="page-item <%= (currentPage === 1) ? 'disabled' : '' %>">
-                        <a class="page-link" href="?page=<%= currentPage - 1 %>&limit=<%= limit %>" aria-label="Previous">
-                            <span aria-hidden="true">&laquo;</span>
-                        </a>
-                      </li>
-
-                      <!-- Page -->
-                      <% for (let i = 1; i <= totalPages; i++) { %>
-                          <li class="page-item <%= (currentPage === i) ? 'active' : '' %>">
-                              <a class="page-link" href="?page=<%= i %>&limit=<%= limit %>"><%= i %></a>
-                          </li>
-                      <% } %>
-                      
-                      <!-- Next Button -->
-                      <li class="page-item <%= (currentPage === totalPages) ? 'disabled' : '' %>">
-                        <a class="page-link" href="?page=<%= currentPage + 1 %>&limit=<%= limit %>" aria-label="Next">
-                            <span aria-hidden="true">&raquo;</span>
-                        </a>
-                      </li>
-                    </ul>
-                  </nav>
-            </div>
+          <table id="contactTable" class="table table-secondary display">
+            <!-- Table Header -->
+            <thead class="">
+                <tr>
+                    <th class="px-4">Name</th>
+                    <th>Phone Number</th>
+                    <th class="text-end pe-4">Action</th>
+                </tr>
+            </thead>
+    
+            <!-- Table Data -->
+            <tbody class="">
+                <% contacts.forEach(contact => { %>
+                    <tr>
+                        <td class="px-4">
+                            <span><%= contact.name %></span>
+                        </td>
+                        <td>
+                            <span><%= contact.mobile %></span>
+                        </td>
+                        <td class="px-4 text-end">
+                            <a href="/contact/<%= contact.name %>" class="btn btn-secondary text-info bg-gradient" data-bs-toggle="tooltip" title="show detail"><i class="bi bi-eye"></i></a>
+                            <a href="/contact-edit/<%= contact.name %>" class="btn btn-secondary text-warning bg-gradient" data-bs-toggle="tooltip" title="edit data"><i class="bi bi-pencil-square"></i></a>
+                            <form action="/contact/<%= contact.name %>" method="post" class="d-inline">
+                                <input type="hidden" name="_method" value="DELETE">
+                                <button type="submit" class="btn btn-secondary text-danger bg-gradient" data-bs-toggle="tooltip" title="delete">
+                                    <i class="bi bi-trash-fill"></i>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                <% }) %>
+            </tbody>
         <% } %>
     </div>
 </div>
@@ -96,4 +67,27 @@
         }
       });
     });
+    new DataTable('#contactTable', {
+      lengthMenu: [5, 10, 25, 50, 75, 100],
+      language: {
+        paginate: {
+            first: 'First',
+            last: 'Last',
+            next: "&rarr;",
+            previous: "&larr;",
+        },
+        search: 'Search:'
+      },
+    });
+    // $(document).ready(function() {
+    //   $('#contactTable').DataTable({
+    //       "pagingType": "full_numbers", // Full pagination control
+    //       "language": {
+    //           "paginate": {
+    //               "previous": "&laquo;",
+    //               "next": "&raquo;"
+    //           }
+    //       }
+    //   });
+    // });
   </script>
