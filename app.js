@@ -112,7 +112,7 @@ app.route('/contact-edit/:name')
             if (error) {
                 console.error(error.message);
             } else {
-                res.render('contact-edit', { contact: contact, title: 'Edit Contact', errors: {} })
+                res.render('contact-edit', { contact: contact, name: name, title: 'Edit Contact', errors: {} })
             }
         });
     })
@@ -136,12 +136,13 @@ app.route('/contact-edit/:name')
             
         if (!errors.isEmpty()) {
             return contacts.getContactDetail(req.params.name, (error, contact) => {
-                console.log(req.body.name);
                 if (error) {
                     console.error(error.message);
-                } else {
+                } else {  
+                    console.log(req.params.name);
                     res.render('contact-edit', {
                         contact: req.body,
+                        name: req.params.name,
                         title: 'Edit Contact',
                         errors: errorMessages,
                     })
