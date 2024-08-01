@@ -68,12 +68,27 @@ app.route('/create-contact')
     })
     .post(
         // Input validation
+        body('name')
+            .trim()
+            .notEmpty().withMessage('Name is required')
+            .custom(async (name, { req }) => {
+                return new Promise((resolve, reject) => {
+                    contacts.isNameTaken(name, (isTaken) => {
+                        if (isTaken) {
+                            reject(new Error('Name already exists'));
+                        } else {
+                            resolve(true);
+                        }
+                    });
+                });
+            }),
         body('email')
+            .trim()
             .isEmail().withMessage('Invalid email address')
             .normalizeEmail(),
         body('mobile')
-            .isMobilePhone().withMessage('Invalid phone number')
             .trim()
+            .isMobilePhone().withMessage('Invalid phone number')
             .escape(), (req, res) => {
             
         const errors = validationResult(req);
@@ -81,7 +96,8 @@ app.route('/create-contact')
             acc[error.path] = error.msg;
             return acc;
         }, {});
-            
+        console.error(errorMessages);
+        
         if (!errors.isEmpty()) {
             return res.render('contact-create', {
                 title: 'Create New Contact',
@@ -112,12 +128,31 @@ app.route('/contact-edit/:name')
             if (error) {
                 console.error(error.message);
             } else {
-                res.render('contact-edit', { contact: contact, title: 'Edit Contact', errors: {} })
+                res.render('contact-edit', { contact: contact, name: name, title: 'Edit Contact', errors: {} })
             }
         });
     })
     .post(
         // Input validation
+        body('name')
+            .trim()
+            .notEmpty().withMessage('Name is required')
+            .custom(async (name, { req }) => {
+                return new Promise((resolve, reject) => {
+                    const originalName = req.body.originalName; // Asumsikan originalName dikirim dari form
+                    if (name === originalName) {
+                        resolve(true); // Nama tidak diubah, lanjutkan
+                    } else {
+                        contacts.isNameTaken(name, (isTaken) => {
+                            if (isTaken) {
+                                reject(new Error('Name already exists'));
+                            } else {
+                                resolve(true);
+                            }
+                        });
+                    }
+                });
+            }),
         body('email')
             .isEmail().withMessage('Invalid email address')
             .normalizeEmail(),
@@ -136,12 +171,13 @@ app.route('/contact-edit/:name')
             
         if (!errors.isEmpty()) {
             return contacts.getContactDetail(req.params.name, (error, contact) => {
-                console.log(req.body.name);
                 if (error) {
                     console.error(error.message);
-                } else {
+                } else {  
+                    console.log(req.params.name);
                     res.render('contact-edit', {
                         contact: req.body,
+                        name: req.params.name,
                         title: 'Edit Contact',
                         errors: errorMessages,
                     })

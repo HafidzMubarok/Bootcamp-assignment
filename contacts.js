@@ -194,4 +194,4 @@ const questions = (stringQuestion, validate = null) => {
 };
 
 // Mengekspor fungsi-fungsi yang didefinisikan di atas
-module.exports = { questions, saveContact, updateContact, getContactList, getContactDetail, deleteContact, isValidEmail, isValidMobile };
+module.exports = { questions, saveContact, updateContact, getContactList, getContactDetail, deleteContact, isValidEmail, isValidMobile, isNameTaken };
