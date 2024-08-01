@@ -1,5 +1,5 @@
-<div class="sidenav">
-    <button type="button" class="btn bg-transparent">
+<div id="sidenav" class="sidenav">
+    <button type="button" id="toggleBtn" class="btn bg-transparent">
         <i class="bi bi-window-sidebar"></i>
     </button>
     <a href="/" class="<%= currentPage === '/' ? 'active' : '' %>">
@@ -12,3 +12,14 @@
         <i class="bi bi-person-badge me-4"></i>Contact
     </a>
 </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var sidenav = document.getElementById("sidenav");
+        var toggleBtn = document.getElementById("toggleBtn");
+
+        toggleBtn.addEventListener("click", function () {
+            sidenav.classList.toggle("hidden");
+        });
+    });
+</script>

@@ -7,6 +7,9 @@ main {
     margin-left: 260px;
     padding: 20px;
 }
+#main-content {
+    transition: margin-left 0.3s ease;
+}
 
 /* Navigation */
 .sidenav {
@@ -19,6 +22,10 @@ main {
     background-color: #343a40;
     overflow-x: hidden;
     padding-top: 20px;
+    transition: transform 0.3s ease;
+}
+.sidenav.hidden {
+    transform: translateX(-100%);
 }
 .sidenav a {
     padding: 10px 15px;
