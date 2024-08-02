@@ -8,6 +8,8 @@ const port = 3000;
 const contacts = require('./contacts');
 const path = require('path');
 
+require('./config/db');
+
 // Using EJS
 app.set('view engine', 'ejs')
 

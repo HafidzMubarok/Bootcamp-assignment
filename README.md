@@ -5,6 +5,7 @@
 [VSCode](https://code.visualstudio.com/)
 
 ## Clone Project
+
 ```sh
 git clone https://github.com/HafidzMubarok/Bootcamp-assignment.git
 ```
@@ -20,3 +21,8 @@ npm install
 ```sh
 npm start
 ```
+
+## Database Configuration (PostgreSQL)
+
+* Change .env.example to .env
+* Set your database connection in .env
