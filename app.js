@@ -5,10 +5,9 @@ const { body, validationResult } = require('express-validator');
 
 const app = express();
 const port = 3000;
-const contacts = require('./contacts');
 const path = require('path');
-
-require('./config/db');
+const contacts = require('./contacts');
+const db = require('./config/db');
 
 // Using EJS
 app.set('view engine', 'ejs')
@@ -93,13 +92,26 @@ app.route('/create-contact')
             .notEmpty().withMessage('Name is required')
             .custom(async (name, { req }) => {
                 return new Promise((resolve, reject) => {
-                    contacts.isNameTaken(name, (isTaken) => {
-                        if (isTaken) {
+                    // contacts.isNameTaken(name, (isTaken) => {
+                    //     if (isTaken) {
+                    //         reject(new Error('Name already exists'));
+                    //     } else {
+                    //         resolve(true);
+                    //     }
+                    // });
+                    const checkSql = 'SELECT COUNT(*) AS count FROM contacts WHERE name = $1';
+                    db.query(checkSql, [name], (err, result) => {
+                        if (err) {
+                            return reject(err);
+                        }
+                        
+                        if (result.rows[0].count > 0) {// Is name already exist in database
                             reject(new Error('Name already exists'));
                         } else {
                             resolve(true);
                         }
-                    });
+                        
+                    })
                 });
             }),
         body('email')
@@ -116,7 +128,7 @@ app.route('/create-contact')
             acc[error.path] = error.msg;
             return acc;
         }, {});
-        console.error(errorMessages);
+        // console.error(errorMessages);
         
         if (!errors.isEmpty()) {
             return res.render('contact-create', {
@@ -126,16 +138,25 @@ app.route('/create-contact')
             });
         }
         
-        const contact = {
-            name: req.body.name,
-            email: req.body.email,
-            mobile: req.body.mobile,
-        };
+        // const contact = {
+        //     name: req.body.name,
+        //     email: req.body.email,
+        //     mobile: req.body.mobile,
+        // };
+        const { name, email, mobile } = req.body;
+        const sql = 'INSERT INTO contacts(name, email, mobile) VALUES($1, $2, $3)';
         
         try {
-            contacts.saveContact(contact);
-            console.log(`Contact data has been saved!`);
-            res.redirect('/contact');
+            // contacts.saveContact(contact);
+            db.query(sql, [name, email, mobile], (err, result) => {
+                if (err) {
+                    throw err;
+                }
+                // console.log(`Contact data has been saved!`);
+                console.log('Contact inserted:', result);
+                res.redirect('/contact');
+            });
+            // res.redirect('/contact');
         } catch (err) {
             console.error(err);
         }
