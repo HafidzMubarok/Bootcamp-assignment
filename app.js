@@ -261,11 +261,20 @@ app.route('/contact-edit/:name')
     })
     
 app.delete('/contact/:name', (req, res) => {
-    const name = req.params.name
-    console.log(`Contact with name ${name} has been deleted!`);
-    contacts.deleteContact(name);
 
-    res.send(`Contact ${name} deleted successfully!`);
+    const { name } = req.params;
+
+    // Query untuk menghapus contact dari database berdasarkan nama
+    const deleteSql = 'DELETE FROM contacts WHERE name = $1';
+
+    db.query(deleteSql, [name], (err, result) => {
+        if (err) {
+            // Jika terjadi error, kirimkan status 500 dan pesan error
+            return res.status(500).send('Server error');
+        }
+        res.send(`Contact ${name} deleted successfully!`);
+    });
+
 })
 
 app.get('/product/:id', (req, res) => {

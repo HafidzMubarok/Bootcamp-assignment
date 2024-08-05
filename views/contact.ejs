@@ -59,6 +59,7 @@
             body: new URLSearchParams(new FormData(this)).toString()
           }).then(response => {
             if (response.ok) {
+              alert('Contact has been deleted.');
               location.reload();
             } else {
               alert('Failed to delete contact.');
