@@ -45,27 +45,24 @@ app.get('/about', (req, res) => {
 
 
 app.get('/contact', (req, res) => {
-    // const page = parseInt(req.query.page) || 1; // halaman saat ini
-    // const limit = parseInt(req.query.limit) || 5; // jumlah item per halaman
-    // const startIndex = (page - 1) * limit;
-    // const endIndex = page * limit;
     
-    contacts.getContactList((contact) => {
-        // Callback ini akan dijalankan setelah contactList terisi
-        res.render('contact', { contacts: contact, title: 'Contacts', currentPage: '/contact' });
-    });
-
-    // contacts.getContactList((contactList) => {
-    //     const contacts = contactList.slice(startIndex, endIndex);
-
-    //     res.render('contact', { 
-    //         contacts: contacts, 
-    //         title: 'Contacts', 
-    //         currentPage: page,
-    //         totalPages: Math.ceil(contactList.length / limit),
-    //         limit: limit,
-    //     });
+    // contacts.getContactList((contact) => {
+    //     // Callback ini akan dijalankan setelah contactList terisi
+    //     res.render('contact', { contacts: contact, title: 'Contacts', currentPage: '/contact' });
     // });
+
+    const sql = 'SELECT name, mobile FROM contacts';
+
+    db.query(sql, [], (err, result) => {
+        if (err) {
+            throw err;
+        }
+
+        const contacts = result.rows;
+
+        console.log('contact: ', result);
+        res.render('contact', { contacts, title: 'Contacts', currentPage: '/contact' });
+    });
 })
 
 app.get('/contact/:name', (req, res) => {
