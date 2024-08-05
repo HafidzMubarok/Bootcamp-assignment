@@ -170,13 +170,17 @@ app.route('/create-contact')
 
 app.route('/contact-edit/:name')
     .get((req, res) => {
+
         const name = req.params.name;
-        contacts.getContactDetail(name, (error, contact) => {
-            if (error) {
-                console.error(error.message);
-            } else {
-                res.render('contact-edit', { contact: contact, name: name, title: 'Edit Contact', errors: {} })
+        const sql = 'SELECT * FROM contacts WHERE name = $1'
+
+        db.query(sql, [name], (err, result) => {
+            if (err) {
+                throw err;
             }
+            
+            const contact = result.rows[0];
+            res.render('contact-edit', { contact, name: name, title: 'Edit Contact', errors: {} })
         });
     })
     .post(
@@ -190,13 +194,19 @@ app.route('/contact-edit/:name')
                     if (name === originalName) {
                         resolve(true); // Nama tidak diubah, lanjutkan
                     } else {
-                        contacts.isNameTaken(name, (isTaken) => {
-                            if (isTaken) {
+                        const checkSql = 'SELECT COUNT(*) AS count FROM contacts WHERE name = $1';
+                        db.query(checkSql, [name], (err, result) => {
+                            if (err) {
+                                return reject(err);
+                            }
+                            
+                            if (result.rows[0].count > 0) {// Is name already exist in database
                                 reject(new Error('Name already exists'));
                             } else {
                                 resolve(true);
                             }
-                        });
+                            
+                        })
                     }
                 });
             }),
@@ -214,34 +224,37 @@ app.route('/contact-edit/:name')
             return acc;
         }, {});
             
-        // console.log(errorMessages);
-            
         if (!errors.isEmpty()) {
-            return contacts.getContactDetail(req.params.name, (error, contact) => {
-                if (error) {
-                    console.error(error.message);
-                } else {  
-                    console.log(req.params.name);
-                    res.render('contact-edit', {
-                        contact: req.body,
-                        name: req.params.name,
-                        title: 'Edit Contact',
-                        errors: errorMessages,
-                    })
+            const name = req.body.originalName;
+            const sql = 'SELECT * FROM contacts WHERE name = $1';
+
+            db.query(sql, [name], (err, result) => {
+                if (err) {
+                    return res.status(500).send('Server error');
                 }
+
+                res.render('contact-edit', {
+                    contact: req.body,
+                    name: req.params.name,
+                    title: 'Edit Contact',
+                    errors: errorMessages,
+                });
             });
+            return;
         }
-        
-        const contact = {
-            name: req.body.name,
-            email: req.body.email,
-            mobile: req.body.mobile,
-        };
+            
+        const { name, email, mobile } = req.body;
+        const updateSql = 'UPDATE contacts SET name = $1, email = $2, mobile = $3 WHERE name = $4';
         
         try {
-            contacts.updateContact(req.params.name, contact);
-            console.log(`Contact data has been saved!`);
-            res.redirect('/contact');
+            // contacts.saveContact(contact);
+            db.query(updateSql, [name, email, mobile, req.body.originalName], (err, result) => {
+                if (err) {
+                    return res.status(500).send('Server error');
+                }
+                res.redirect('/contact');
+            });
+
         } catch (err) {
             console.error(err);
         }
