@@ -59,22 +59,31 @@ app.get('/contact', (req, res) => {
         }
 
         const contacts = result.rows;
-
-        console.log('contact: ', result);
         res.render('contact', { contacts, title: 'Contacts', currentPage: '/contact' });
     });
 })
 
 app.get('/contact/:name', (req, res) => {
-    // res.sendFile('contact.html', { root: __dirname });
+    // const name = req.params.name;
+    // contacts.getContactDetail(name, (error, contact) => {
+    //     if (error) {
+    //         console.error(error.message);
+    //     } else {
+    //         // console.log('Contact details:', contact);
+    //         res.render('contact-detail', { contact: contact, title: 'Contact Detail' })
+    //     }
+    // });
+
     const name = req.params.name;
-    contacts.getContactDetail(name, (error, contact) => {
-        if (error) {
-            console.error(error.message);
-        } else {
-            // console.log('Contact details:', contact);
-            res.render('contact-detail', { contact: contact, title: 'Contact Detail' })
+    const sql = 'SELECT * FROM contacts WHERE name = $1'
+
+    db.query(sql, [name], (err, result) => {
+        if (err) {
+            throw err;
         }
+        
+        const contact = result.rows[0];
+        res.render('contact-detail', { contact, title: 'Contact Detail' })
     });
 })
 
