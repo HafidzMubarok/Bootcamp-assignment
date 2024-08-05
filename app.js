@@ -6,7 +6,7 @@ const { body, validationResult } = require('express-validator');
 const app = express();
 const port = 3000;
 const path = require('path');
-const contacts = require('./contacts');
+const contacts = require('./controllers/contactsController');
 const db = require('./config/db');
 
 // Using EJS
@@ -41,32 +41,16 @@ app.get('/about', (req, res) => {
 
 
 app.get('/contact', (req, res) => {
-
-    const sql = 'SELECT name, mobile FROM contacts';
-
-    db.query(sql, [], (err, result) => {
-        if (err) {
-            throw err;
-        }
-
-        const contacts = result.rows;
+    contacts.getDataContacts((contacts) => {
         res.render('contact', { contacts, title: 'Contacts', currentPage: '/contact' });
-    });
+    })
 })
 
 app.get('/contact/:name', (req, res) => {
-
     const name = req.params.name;
-    const sql = 'SELECT * FROM contacts WHERE name = $1'
-
-    db.query(sql, [name], (err, result) => {
-        if (err) {
-            throw err;
-        }
-        
-        const contact = result.rows[0];
+    contacts.getContactDetail(name, (contact) => {
         res.render('contact-detail', { contact, title: 'Contact Detail' })
-    });
+    })
 })
 
 app.route('/create-contact')
@@ -147,17 +131,9 @@ app.route('/create-contact')
 
 app.route('/contact-edit/:name')
     .get((req, res) => {
-
         const name = req.params.name;
-        const sql = 'SELECT * FROM contacts WHERE name = $1'
-
-        db.query(sql, [name], (err, result) => {
-            if (err) {
-                throw err;
-            }
-            
-            const contact = result.rows[0];
-            res.render('contact-edit', { contact, name: name, title: 'Edit Contact', errors: {} })
+        contacts.getContactDetail(name, (contact) => {
+            res.render('contact-edit', { contact, name, title: 'Edit Contact', errors: {} });
         });
     })
     .post(
