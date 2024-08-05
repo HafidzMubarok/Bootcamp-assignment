@@ -32,24 +32,15 @@ app.use((req, res, next) => {
 
 //Route
 app.get('/', (req, res) => {
-    // const filePath = path.join(__dirname, 'index.html');
-    // res.sendFile(filePath);
-    // res.sendFile('index.html', { root: __dirname });
     res.render('index', { name: 'Tatang', title: 'Home', currentPage: '/' })
 })
 
 app.get('/about', (req, res) => {
-    // res.sendFile('about.html', { root: __dirname });
     res.render('about', { title: 'About', currentPage: '/about' })
 })
 
 
 app.get('/contact', (req, res) => {
-    
-    // contacts.getContactList((contact) => {
-    //     // Callback ini akan dijalankan setelah contactList terisi
-    //     res.render('contact', { contacts: contact, title: 'Contacts', currentPage: '/contact' });
-    // });
 
     const sql = 'SELECT name, mobile FROM contacts';
 
@@ -64,15 +55,6 @@ app.get('/contact', (req, res) => {
 })
 
 app.get('/contact/:name', (req, res) => {
-    // const name = req.params.name;
-    // contacts.getContactDetail(name, (error, contact) => {
-    //     if (error) {
-    //         console.error(error.message);
-    //     } else {
-    //         // console.log('Contact details:', contact);
-    //         res.render('contact-detail', { contact: contact, title: 'Contact Detail' })
-    //     }
-    // });
 
     const name = req.params.name;
     const sql = 'SELECT * FROM contacts WHERE name = $1'
@@ -143,12 +125,7 @@ app.route('/create-contact')
                 formData: req.body
             });
         }
-        
-        // const contact = {
-        //     name: req.body.name,
-        //     email: req.body.email,
-        //     mobile: req.body.mobile,
-        // };
+
         const { name, email, mobile } = req.body;
         const sql = 'INSERT INTO contacts(name, email, mobile) VALUES($1, $2, $3)';
         
